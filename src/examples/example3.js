@@ -6,13 +6,17 @@ import './example.css';
 
 @observer
 class Example extends React.Component {
-	@observable test1 = 1;
+	@observable test1 = 'Reached';
+	@observable test2 = 1;
 
 	@computed
-	get randomVal() {
-		// console.log(this.test1);
-		console.trace();
-		return Math.random();
+	get dependencyCheck() {
+		let a = 'Unreached';
+		if (this.test2 === 3) {debugger;
+			// console.trace();
+			a = this.test1;
+		}
+		return a;
 	}
 
 	@action.bound
@@ -20,9 +24,9 @@ class Example extends React.Component {
 		this.test1++;
 	}
 
-	@computed
-	get computedRandomVal() {
-		return Math.round(this.randomVal);
+	@action.bound
+	changeTest2() {
+		this.test2++;
 	}
 
 	render() {
@@ -30,13 +34,11 @@ class Example extends React.Component {
 			<div className="container">
 				<div className="row">
 					<button className="button" onClick={this.changeTest1}>Change Test1</button>
+					<button className="button" onClick={this.changeTest2}>Change Test2</button>
 				</div>
 				<br/>
 				<p>
-					<span>Computed RandomVal call: - </span>{this.randomVal}
-				</p>
-				<p>
-					<span>Computed ComputedRandomVal call: - </span>{this.computedRandomVal}
+					<span>Reach dependency: - </span>{this.dependencyCheck}
 				</p>
 			</div>
 		)
